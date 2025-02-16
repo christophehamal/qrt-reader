@@ -25,10 +25,10 @@ class Parameters():
     def company_tablestrategy(self, company):
         return self.TABLE_STRATEGIES['tables'][company]
     
-    def company_cellstrategy(self, company, table_bbox, page):
+    def company_cellstrategy(self, company, table_bbox, page, qrt):
         combined_strategy = self.TABLE_STRATEGIES['cells'][company]
 
-        if company == 'AXA':
+        if company == 'AXA' and qrt == 'S.05.01.02 (part 1)':
             horizontal_lines_list = []
             line_strategy = combined_strategy
             line_strategy.update({'horizontal_strategy': 'lines', 'join_y_tolerance': 5, 'snap_y_tolerance': 5})

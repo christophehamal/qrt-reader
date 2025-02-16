@@ -140,12 +140,15 @@ class QRTParser:
 
         # Implement standard QRT line labels
         if len(df.columns) > 21:
-            map_ = df.columns.map(lambda x: (x is not None) and (x != '') and (x != 'None') and (x != 'in EUR'))
+            map_ = df.columns.map(lambda x: (x not in ['', 'None', 'in EUR', 'in thousand EUR']) and (x is not None))
             df = df.loc[:, map_.tolist()]
 
         match len(df.columns):
             case 21:
                 df.columns = lines21
+            case 26:
+                df.loc[:, 'Premiums written'] = ''
+                df.columns = lines27
             case 27:
                 df.columns = lines27
         df = df.drop(["Premiums written", "Premiums earned", "Claims incurred"], axis=1)

@@ -157,22 +157,32 @@ class ProcessWindow(ttk.Frame):
             self.update_statusbar('Please draw a rectangle on the page first.   Ready...')
             return
 
-        table = cropped_page.find_table(self.parameters.company_tablestrategy(self.selected_company.get()))
-        strategy = self.parameters.company_cellstrategy(self.selected_company.get(), table.bbox, cropped_page)
-        
+        try:
+            table = cropped_page.find_table(self.parameters.company_tablestrategy(self.selected_company.get()))
+            strategy = self.parameters.company_cellstrategy(self.selected_company.get(), table.bbox, cropped_page, self.selected_qrt.get())
+        except Exception as e:
+            if table == None:
+                self.update_statusbar('No table found in selected area.   Ready...')
+            else:
+                self.update_statusbar(str(e) + '.   Ready...')
+            return
+
         analyzed_img = cropped_page.to_image().debug_tablefinder(table_settings=strategy)
         analyzed_tk = PIL.ImageTk.PhotoImage(analyzed_img.annotated)
         
         parser = QRTParser()
         if self.selected_qrt.get() in self.parameters.AVAILABLE_QRTS:
-            match self.selected_qrt.get():
-                case 'S.05.01.02 (part 1)':
-                    qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
-                case 'S.05.01.02 (part 2)':
-                    qrt_output = parser.s050102_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
-                case _:
-                    self.update_statusbar('No parser for selected QRT.   Ready...')
-            print(qrt_output)
+            try:
+                match self.selected_qrt.get():
+                    case 'S.05.01.02 (part 1)':
+                        qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                    case 'S.05.01.02 (part 2)':
+                        qrt_output = parser.s050102_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                    case _:
+                        self.update_statusbar('No parser for selected QRT.   Ready...')
+            except Exception as e:
+                self.update_statusbar(str(e) + '.   Ready...')
+                return
             self.parent.displaywindow.page_canvas.image = analyzed_tk
             self.parent.displaywindow.page_canvas.config(width=analyzed_tk.width(), height=analyzed_tk.height())
             self.parent.displaywindow.page_canvas.itemconfig(self.parent.displaywindow.canvas_image, image=analyzed_tk)
