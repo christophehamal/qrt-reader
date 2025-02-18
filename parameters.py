@@ -1,6 +1,13 @@
 class Parameters():
    
-    AVAILABLE_QRTS = ['S.05.01.02 (part 1)', 'S.05.01.02 (part 2)', 'S.05.01.02 (single table)']
+    AVAILABLE_QRTS = [
+        'S.05.01.02.01 (part 1)', 
+        'S.05.01.02.01 (part 2)', 
+        'S.05.01.02.01 (single table)',
+        'S.17.01.02.01 (part 1)', 
+        'S.17.01.02.01 (part 2)', 
+        'S.17.01.02.01 (single table)'
+    ]
 
     FILENAME_MASKS = {
         'AG': 'AG',

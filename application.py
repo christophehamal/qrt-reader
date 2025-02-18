@@ -174,12 +174,24 @@ class ProcessWindow(ttk.Frame):
         if self.selected_qrt.get() in self.parameters.AVAILABLE_QRTS:
             try:
                 match self.selected_qrt.get():
-                    case 'S.05.01.02 (part 1)':
-                        qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
-                    case 'S.05.01.02 (part 2)':
-                        qrt_output = parser.s050102_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
-                    case 'S.05.01.02 (single table)':
-                        qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                    case 'S.05.01.02.01 (part 1)':
+                        qrt_output = parser.s05010201_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s05010201(qrt_output)
+                    case 'S.05.01.02.01 (part 2)':
+                        qrt_output = parser.s05010201_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s05010201(qrt_output)
+                    case 'S.05.01.02.01 (single table)':
+                        qrt_output = parser.s05010201_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s05010201(qrt_output)
+                    case 'S.17.01.02.01 (part 1)':
+                        qrt_output = parser.s17010201_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s17010201(qrt_output)
+                    case 'S.17.01.02.01 (part 2)':
+                        qrt_output = parser.s17010201_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s17010201(qrt_output)
+                    case 'S.17.01.02.01 (single table)':
+                        qrt_output = parser.s17010201_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                        self.database.update_s17010201(qrt_output)
                     case _:
                         self.update_statusbar('No parser for selected QRT.   Ready...')
             except Exception as e:
@@ -188,7 +200,6 @@ class ProcessWindow(ttk.Frame):
             self.parent.displaywindow.page_canvas.image = analyzed_tk
             self.parent.displaywindow.page_canvas.config(width=analyzed_tk.width(), height=analyzed_tk.height())
             self.parent.displaywindow.page_canvas.itemconfig(self.parent.displaywindow.canvas_image, image=analyzed_tk)
-            self.database.update_s050102(qrt_output)
         else:
             self.update_statusbar('Select QRT format to be analyzed.   Ready...')
 

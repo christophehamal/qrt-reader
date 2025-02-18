@@ -4,8 +4,8 @@ from typing import Optional
 class Base (DeclarativeBase):
     pass
 
-class S050102 (Base):
-    __tablename__ = 'S050102'
+class S05010201 (Base):
+    __tablename__ = 'S05010201'
     Company: Mapped[str] = mapped_column(primary_key=True)
     Year: Mapped[int] = mapped_column(primary_key=True)
     LoB: Mapped[str] = mapped_column(primary_key=True)
@@ -32,6 +32,26 @@ class S050102 (Base):
     R0550: Mapped[Optional[int]]
     R1210: Mapped[Optional[int]]
     R1300: Mapped[Optional[int]]
+
+class S17010201 (Base):
+    __tablename__ = 'S17010201'
+    Company: Mapped[str] = mapped_column(primary_key=True)
+    Year: Mapped[int] = mapped_column(primary_key=True)
+    LoB: Mapped[str] = mapped_column(primary_key=True)
+    R0010: Mapped[Optional[int]]
+    R0050: Mapped[Optional[int]]
+    R0060: Mapped[Optional[int]]
+    R0140: Mapped[Optional[int]]
+    R0150: Mapped[Optional[int]]
+    R0160: Mapped[Optional[int]]
+    R0240: Mapped[Optional[int]]
+    R0250: Mapped[Optional[int]]
+    R0260: Mapped[Optional[int]]
+    R0270: Mapped[Optional[int]]
+    R0280: Mapped[Optional[int]]
+    R0320: Mapped[Optional[int]]
+    R0330: Mapped[Optional[int]]
+    R0340: Mapped[Optional[int]]
 
 class Account (Base):
     __tablename__ = 'Account'
