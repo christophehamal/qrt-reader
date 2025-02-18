@@ -87,7 +87,31 @@ class QRTParser:
             'Other expenses', 
             'Total expenses'
         ]
-
+        lines23 = [
+            'Premiums written: Gross - Direct Business',
+            'Premiums written: Gross - Proportional reinsurance accepted',
+            'Premiums written: Gross - Non-proportional reinsurance accepted',
+            "Premiums written: Reinsurers' share",
+            'Premiums written: Net', 
+            'Premiums earned: Gross - Direct Business',
+            'Premiums earned: Gross - Proportional reinsurance accepted',
+            'Premiums earned: Gross - Non-proportional reinsurance accepted', 
+            "Premiums earned: Reinsurers' share",
+            'Premiums earned: Net', 
+            'Claims incurred: Gross - Direct Business',
+            'Claims incurred: Gross - Proportional reinsurance accepted',
+            'Claims incurred: Gross - Non-proportional reinsurance accepted', 
+            "Claims incurred: Reinsurers' share",
+            'Claims incurred: Net',
+            'Changes in other technical provisions: Gross - Direct Business',
+            'Changes in other technical provisions: Gross - Proportional reinsurance accepted',
+            'Changes in other technical provisions: Gross - Non-proportional reinsurance accepted',
+            "Changes in other technical provisions: Reinsurers'share",
+            'Changes in other technical provisions: Net',
+            'Expenses incurred', 
+            'Other expenses', 
+            'Total expenses'
+        ]
         lines27 = [
             'Premiums written', 
             'Premiums written: Gross - Direct Business',
@@ -123,17 +147,24 @@ class QRTParser:
         
         # Find column names
         headerCol = 0
+        codes_present = False
         for index, row in df.iterrows():
-            present = row.map(lambda x: 'gross' in str(x).lower()).any()
-            if present:
+            codes_present = row.map(lambda x: 'R01' in str(x)).any()
+            if codes_present:
                 headerCol = index
                 break
+        if not codes_present:
+            for index, row in df.iterrows():
+                present = row.map(lambda x: 'gross' in str(x).lower()).any()
+                if present:
+                    headerCol = index
+                    break
         df = df[headerCol:]
         df.columns = df.iloc[0]
         df = df[1:]
 
         # Remove coded headers
-        map_ = df.apply(lambda row: not(row.map(lambda x: 'R011' in str(x)).any()), axis=1)
+        map_ = df.apply(lambda row: not(row.map(lambda x: 'R01' in str(x)).any()), axis=1)
         df = df.loc[map_]
         map_ = df.apply(lambda row: not(row.map(lambda x: 'C0' in str(x)).any()), axis=0)
         df = df.loc[:, map_.tolist()]
@@ -142,16 +173,20 @@ class QRTParser:
         if len(df.columns) > 21:
             map_ = df.columns.map(lambda x: (x not in ['', 'None', 'in EUR', 'in thousand EUR']) and (x is not None))
             df = df.loc[:, map_.tolist()]
-
         match len(df.columns):
             case 21:
                 df.columns = lines21
+            case 23:
+                df.columns = lines23
             case 26:
                 df.loc[:, 'Premiums written'] = ''
                 df.columns = lines27
             case 27:
                 df.columns = lines27
-        df = df.drop(["Premiums written", "Premiums earned", "Claims incurred"], axis=1)
+        try:
+            df = df.drop(["Premiums written", "Premiums earned", "Claims incurred"], axis=1)
+        except KeyError:
+            df = df.drop(["Premiums written", "Premiums earned", "Claims incurred"], axis=1, errors='ignore')
 
         # Clean up cell content to make numeric
         df = df.map(lambda x: re.sub('[ +' + zerocharacter + thousandseparator + ']', '', str(x)))
@@ -161,4 +196,12 @@ class QRTParser:
         df['Company'] = company
         df['Year'] = year
 
+        # split merged cell contents
+        for row_index, row in df.iterrows():
+            for column_index in range(len(row)):
+                if '\n' in str(row.iloc[column_index]):
+                    cell_lines = str(row.iloc[column_index]).split('\n')
+                    for line_counter in range(len(cell_lines)):
+                        df.iloc[row_index, column_index+line_counter] = cell_lines[line_counter]
+        
         return df

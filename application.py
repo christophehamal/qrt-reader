@@ -178,6 +178,8 @@ class ProcessWindow(ttk.Frame):
                         qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
                     case 'S.05.01.02 (part 2)':
                         qrt_output = parser.s050102_part2(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
+                    case 'S.05.01.02 (single table)':
+                        qrt_output = parser.s050102_part1(self.selected_company.get(), self.selected_year.get(), cropped_page.extract_table(strategy))
                     case _:
                         self.update_statusbar('No parser for selected QRT.   Ready...')
             except Exception as e:
