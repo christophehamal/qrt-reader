@@ -271,7 +271,7 @@ class QRTParser:
         df = df.loc[:, map_.tolist()]
 
         # Implement standard QRT line labels
-        if len(df.columns) > 21:
+        if len(df.columns) > 19:
             map_ = df.columns.map(lambda x: (x not in ['', 'None', 'in EUR', 'in thousand EUR']) and (x is not None))
             df = df.loc[:, map_.tolist()]
         match len(df.columns):
@@ -280,9 +280,9 @@ class QRTParser:
             case 19:
                 df.columns = lines19
         try:
-            df = df.drop(['Technical provisions calculated as a sum of BE and RM', 'Best estimate', 'Premium provisions', 'Claims provisions', 'Technical provisions - total'], axis=1)
+            df = df.drop(['Technical provisions calculated as a sum of BE and RM', 'Best estimate', 'Premium provisions', 'Claims provisions', 'Total technical provisions'], axis=1)
         except KeyError:
-            df = df.drop(['Technical provisions calculated as a sum of BE and RM', 'Best estimate', 'Premium provisions', 'Claims provisions', 'Technical provisions - total'], axis=1, errors='ignore')
+            df = df.drop(['Technical provisions calculated as a sum of BE and RM', 'Best estimate', 'Premium provisions', 'Claims provisions', 'Total technical provisions'], axis=1, errors='ignore')
 
         # Clean up cell content to make numeric
         df = df.map(lambda x: re.sub('[ +' + thousandseparator + ']', '', str(x)))
