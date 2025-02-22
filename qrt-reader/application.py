@@ -6,7 +6,7 @@ from tkinter import ttk
 from parameters import Parameters
 from filemanager import FileManager
 from parser import QRTParser
-from database import Database
+from database.database import Database
 
 class DisplayWindow(ttk.Frame):
 
@@ -35,7 +35,7 @@ class DisplayWindow(ttk.Frame):
         self.page_view = ttk.Frame(self, style='TFrame', padding=10)
         self.page_view.pack(side='top', fill='both', expand=True)
 
-        dummy_img = PIL.ImageTk.PhotoImage(PIL.Image.open('Img/pixel.png'))
+        dummy_img = PIL.ImageTk.PhotoImage(PIL.Image.open('resources/img/pixel.png'))
         self.page_canvas = tk.Canvas(self.page_view)
         self.page_canvas.image = dummy_img
         self.canvas_image = self.page_canvas.create_image((0, 0), anchor='nw', image=dummy_img)

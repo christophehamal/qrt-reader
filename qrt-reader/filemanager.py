@@ -8,4 +8,4 @@ class FileManager():
 
     def getSFCRPath(self, company, year):
         # later add logic for Azure / DB storage
-        return "SFCR Reports/" + self.parameters.FILENAME_MASKS[company] + " SFCR " + year + ".pdf"
+        return "resources/SFCR Reports/" + self.parameters.FILENAME_MASKS[company] + " SFCR " + year + ".pdf"

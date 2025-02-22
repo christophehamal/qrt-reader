@@ -36,7 +36,6 @@ class MainApplication(ttk.Frame):
         self.main = Main(self, style="TFrame")
         self.statusbar = Statusbar(self, style="info.TFrame")
 
-        #self.navbar.pack(side="top", fill="x")
         self.main.pack(side="top", fill="both", expand=True)
         self.statusbar.pack(side="bottom", fill="x")
 
